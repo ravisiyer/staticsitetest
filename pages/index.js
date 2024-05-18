@@ -1,32 +1,27 @@
-import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
 import apolloClient from "@/src/setup/apolloClient";
 import { gql } from "@apollo/client";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const Home = ({ projects }) => {
   return (
     <ul>
-      {projects.nodes.map(({ name, description, id }) => (
+      {projects.nodes.map(({ name, description, id, fullPath }) => (
         <li key={id}>
           <p>
             <strong>{name}</strong>
           </p>
           {description && <span>{description}</span>}
+          <div>
+            <Link href={`/project/${fullPath}`}>Details</Link>
+          </div>
         </li>
       ))}
     </ul>
   );
 };
-
-// export default function Home({ buildTimestamp }) {
-//   // export default function Home() {
-//   // return <p>Hello From my next.js app!</p>;
-//   return <p>Hello From my next.js app! App built at: {buildTimestamp}</p>;
-// }
 
 const PROJECTS_QUERY = gql`
   query {
@@ -35,6 +30,7 @@ const PROJECTS_QUERY = gql`
         id
         name
         description
+        fullPath
       }
     }
   }
@@ -51,13 +47,5 @@ export const getStaticProps = async () => {
     },
   };
 };
-// export const getStaticProps = () => {
-//   return {
-//     props: {
-//       buildTimestamp: Date.now(),
-//       // buildTimestamp: "test",
-//     },
-//   };
-// };
 
 export default Home;
